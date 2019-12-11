@@ -5,6 +5,7 @@ jobs:
         name: build sample code
         runs-on: windows-latest
         strategy:
+            fast-fail: false
             matrix:
                 platform:
                     - x64
