@@ -5,19 +5,16 @@
 #include <vector>
 #include <iostream>
 
-template<typename Iterator,typename T>
-struct accumulate_block
+template<typename Iterator, typename T>
+void accumulate_block(Iterator first, Iterator last, T& result)
 {
-    void operator()(Iterator first,Iterator last,T& result)
-    {
-        result=std::accumulate(first,last,result);
-    }
+    result = std::accumulate(first, last, result);
 };
 
 template<typename Iterator,typename T>
 T parallel_accumulate(Iterator first,Iterator last,T init)
 {
-    unsigned long const length=std::distance(first,last);
+    unsigned long const length = static_cast<unsigned long>(std::distance(first, last));
 
     if(!length)
         return init;
@@ -43,11 +40,11 @@ T parallel_accumulate(Iterator first,Iterator last,T init)
         Iterator block_end=block_start;
         std::advance(block_end,block_size);
         threads[i]=std::thread(
-            accumulate_block<Iterator,T>(),
+            accumulate_block<Iterator,T>,
             block_start,block_end,std::ref(results[i]));
         block_start=block_end;
     }
-    accumulate_block<Iterator,T>()(block_start,last,results[num_threads-1]);
+    accumulate_block<Iterator,T>(block_start,last,results[num_threads-1]);
     
     std::for_each(threads.begin(),threads.end(),
         std::mem_fn(&std::thread::join));
@@ -58,7 +55,7 @@ T parallel_accumulate(Iterator first,Iterator last,T init)
 int main()
 {
     std::vector<int> vi;
-    for(int i=0;i<10;++i)
+    for (int i = 0; i < 100; ++i)
     {
         vi.push_back(10);
     }
