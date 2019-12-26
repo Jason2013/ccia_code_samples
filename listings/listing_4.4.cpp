@@ -29,10 +29,13 @@ public:
 struct data_chunk
 {};
 
-data_chunk prepare_data();
-bool more_data_to_prepare();
-void process(data_chunk);
-bool is_last_chunk(data_chunk);
+data_chunk prepare_data()
+{
+    return data_chunk();
+};
+bool more_data_to_prepare() { return false; };
+void process(data_chunk) {};
+bool is_last_chunk(data_chunk) { return true; };
 
 threadsafe_queue<data_chunk> data_queue;
 
@@ -55,4 +58,9 @@ void data_processing_thread()
         if(is_last_chunk(data))
             break;
     }
+}
+
+int main()
+{
+    return 0;
 }
